@@ -11,9 +11,10 @@ it, so users can install it in two commands.
 /plugin install grover@grover-marketplace
 ```
 
-On install you'll be prompted for your Grover **access token**. It's stored
-securely (system keychain) and namespaced to this plugin — see
-[Authentication](#authentication).
+The bundled MCP server reads your Grover **access token** from the
+`GROVER_ACCESS_TOKEN` environment variable — set it once per client (see
+[Authentication](#authentication)). This works on both Claude Code (CLI) and
+the Claude Desktop app.
 
 ## What's included
 
@@ -24,14 +25,30 @@ securely (system keychain) and namespaced to this plugin — see
 
 ## Authentication
 
-The plugin declares a `userConfig.accessToken` field, so Claude Code prompts for
-your token at install time. Because it's marked `sensitive`, the value is stored
-in your system keychain (not plaintext) and namespaced to this plugin
-(`grover@grover-marketplace`), so it never collides with other plugins' config.
+The MCP server authenticates with `Authorization: Bearer ${GROVER_ACCESS_TOKEN}`,
+interpolated from the environment. Set that variable once for your client:
 
-The token is injected into the MCP server's auth header via the
-`${user_config.accessToken}` placeholder — no global environment variable and no
-manual `settings.json` editing required.
+### Claude Code (CLI)
+
+Add it to `~/.claude/settings.json`:
+
+```json
+{
+  "env": { "GROVER_ACCESS_TOKEN": "tok_your_token_here" }
+}
+```
+
+(A shell `export GROVER_ACCESS_TOKEN=...` before launching `claude` also works.)
+
+### Claude Desktop
+
+Open **Settings → Customize** and add `GROVER_ACCESS_TOKEN` in the local
+environment editor. Desktop injects it into the plugin's MCP server the same way.
+
+> **Note:** `GROVER_ACCESS_TOKEN` lives in the shared, flat environment namespace
+> (not per-plugin), so the `GROVER_` prefix is what keeps it from colliding with
+> other plugins. The seamless alternative — no token handling on either client —
+> is to add MCP OAuth support to the Grover server.
 
 ## Uninstalling
 
@@ -44,7 +61,7 @@ manual `settings.json` editing required.
 
 ```text
 .claude-plugin/
-  plugin.json        # Plugin manifest (name, version, user config)
+  plugin.json        # Plugin manifest (name, version, MCP server)
   marketplace.json   # Marketplace index pointing at this plugin (source: "./")
 skills/
   hello/SKILL.md     # The hello skill
