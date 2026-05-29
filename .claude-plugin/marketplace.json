@@ -1,0 +1,15 @@
+{
+    "name": "grover-marketplace",
+    "owner": {
+        "name": "Will Fitch",
+        "email": "will@getstellar.ai"
+    },
+    "description": "Marketplace for the Grover Claude Code plugin",
+    "plugins": [
+        {
+            "name": "grover",
+            "source": "./",
+            "description": "A plugin for Grover"
+        }
+    ]
+}

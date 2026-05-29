@@ -1,0 +1,16 @@
+{
+    "name": "grover",
+    "description": "A plugin for Grover",
+    "version": "1.0.0",
+    "author": {
+        "name": "Will Fitch"
+    },
+    "userConfig": {
+        "accessToken": {
+            "type": "string",
+            "title": "Access Token",
+            "description": "The access token for the Grover API",
+            "required": true
+        }
+    }
+}
