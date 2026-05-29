@@ -16,21 +16,33 @@ The bundled MCP server reads your Grover **access token** from the
 [Authentication](#authentication)). This works on both Claude Code (CLI) and
 the Claude Desktop app.
 
+**Requirement:** Node.js (the bundled MCP server runs via `npx`).
+
 ## What's included
 
 | Component | Description |
 |-----------|-------------|
 | `hello` skill | Greets you as the "Grover Rig Helper" (run `/hello`). |
-| `grover` MCP server | Remote HTTP MCP server (`/mcp` on Vercel), bearer-token auth. |
+| `grover` MCP server | Connects to the remote Grover endpoint (`/mcp` on Vercel) through a local `mcp-remote` bridge, with bearer-token auth. |
 
 ## Authentication
 
-The MCP server authenticates with `Authorization: Bearer ${GROVER_ACCESS_TOKEN}`,
-interpolated from the environment. Set that variable once for your client:
+### Why a bridge?
 
-### Claude Code (CLI)
+The Grover endpoint is a **remote** MCP server that authenticates with a static
+bearer token. Claude Code (CLI) can talk to it directly, but **Claude Desktop
+cannot** — Desktop only supports OAuth for remote servers and has no way to send a
+static `Authorization` header. To make one plugin work on both, the `grover`
+server runs as a **local stdio process** (`npx mcp-remote …`) that proxies to the
+remote endpoint and attaches the bearer header itself. Local stdio servers are
+fully supported on both clients.
 
-Add it to `~/.claude/settings.json`:
+### Setting your token
+
+Both clients build the auth header from `GROVER_ACCESS_TOKEN`. Set that variable
+once for your client:
+
+**Claude Code (CLI)** — add it to `~/.claude/settings.json`:
 
 ```json
 {
@@ -40,15 +52,22 @@ Add it to `~/.claude/settings.json`:
 
 (A shell `export GROVER_ACCESS_TOKEN=...` before launching `claude` also works.)
 
-### Claude Desktop
+**Claude Desktop** — open **Settings → Customize** and add `GROVER_ACCESS_TOKEN`
+in the local environment editor, then restart Desktop.
 
-Open **Settings → Customize** and add `GROVER_ACCESS_TOKEN` in the local
-environment editor. Desktop injects it into the plugin's MCP server the same way.
+The plugin's MCP config assembles `Bearer ${GROVER_ACCESS_TOKEN}` into an `env`
+value (not into `args`) on purpose: Claude Desktop on Windows mangles spaces
+inside `args`, so the space in `Bearer <token>` is kept out of the argument list.
 
-> **Note:** `GROVER_ACCESS_TOKEN` lives in the shared, flat environment namespace
-> (not per-plugin), so the `GROVER_` prefix is what keeps it from colliding with
-> other plugins. The seamless alternative — no token handling on either client —
-> is to add MCP OAuth support to the Grover server.
+> **Desktop fallback:** if the token isn't picked up (i.e. `GROVER_ACCESS_TOKEN`
+> isn't interpolated by Desktop), set the fully-formed header directly instead —
+> add `GROVER_AUTH_HEADER` = `Bearer tok_your_token_here` in the environment
+> editor. `mcp-remote` substitutes that value with no interpolation by Claude.
+
+> **Note:** these variables live in the shared, flat environment namespace (not
+> per-plugin), so the `GROVER_` prefix is what keeps them from colliding with
+> other plugins. The seamless long-term alternative — no token handling on either
+> client — is to add MCP OAuth support to the Grover server.
 
 ## Uninstalling
 
