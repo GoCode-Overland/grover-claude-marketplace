@@ -1,22 +1,25 @@
 {
     "name": "grover",
     "description": "A plugin for Grover",
-    "version": "2.0.0",
+    "version": "3.0.0",
     "author": {
         "name": "Will Fitch"
     },
+    "userConfig": {
+        "accessToken": {
+            "type": "string",
+            "title": "Access Token",
+            "description": "The bearer access token for the Grover API",
+            "required": true,
+            "sensitive": true
+        }
+    },
     "mcpServers": {
         "grover": {
-            "command": "npx",
-            "args": [
-                "-y",
-                "mcp-remote",
-                "https://grover-chat-git-admin-mcp-server-go-code.vercel.app/mcp",
-                "--header",
-                "Authorization:${GROVER_AUTH_HEADER}"
-            ],
-            "env": {
-                "GROVER_AUTH_HEADER": "Bearer ${GROVER_ACCESS_TOKEN}"
+            "type": "http",
+            "url": "https://grover-chat-git-admin-mcp-server-go-code.vercel.app/mcp",
+            "headers": {
+                "Authorization": "Bearer ${user_config.accessToken}"
             }
         }
     }
