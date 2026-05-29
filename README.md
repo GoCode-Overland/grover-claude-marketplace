@@ -11,14 +11,31 @@ it, so users can install it in two commands.
 /plugin install grover@grover-marketplace
 ```
 
-On install you'll be prompted for your Grover **access token**, which the plugin
-stores in your local Claude Code config.
+The plugin bundles the Grover MCP server, which authenticates with a **bearer
+access token**. Supply it via the `GROVER_ACCESS_TOKEN` environment variable
+(see [Authentication](#authentication)).
 
 ## What's included
 
 | Component | Description |
 |-----------|-------------|
 | `hello` skill | Greets you as the "Grover Rig Helper" (run `/hello`). |
+| `grover` MCP server | Remote HTTP MCP server (`/mcp` on Vercel), bearer-token auth. |
+
+## Authentication
+
+The bundled MCP server reads the token from the `GROVER_ACCESS_TOKEN` environment
+variable. Set it once in `~/.claude/settings.json`:
+
+```json
+{
+  "env": { "GROVER_ACCESS_TOKEN": "tok_your_token_here" }
+}
+```
+
+Claude Code injects this into the session, so the `${GROVER_ACCESS_TOKEN}`
+placeholder in the plugin's MCP config resolves automatically. (A shell
+`export GROVER_ACCESS_TOKEN=...` before launching `claude` also works.)
 
 ## Uninstalling
 
