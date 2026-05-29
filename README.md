@@ -11,9 +11,9 @@ it, so users can install it in two commands.
 /plugin install grover@grover-marketplace
 ```
 
-The plugin bundles the Grover MCP server, which authenticates with a **bearer
-access token**. Supply it via the `GROVER_ACCESS_TOKEN` environment variable
-(see [Authentication](#authentication)).
+On install you'll be prompted for your Grover **access token**. It's stored
+securely (system keychain) and namespaced to this plugin — see
+[Authentication](#authentication).
 
 ## What's included
 
@@ -24,18 +24,14 @@ access token**. Supply it via the `GROVER_ACCESS_TOKEN` environment variable
 
 ## Authentication
 
-The bundled MCP server reads the token from the `GROVER_ACCESS_TOKEN` environment
-variable. Set it once in `~/.claude/settings.json`:
+The plugin declares a `userConfig.accessToken` field, so Claude Code prompts for
+your token at install time. Because it's marked `sensitive`, the value is stored
+in your system keychain (not plaintext) and namespaced to this plugin
+(`grover@grover-marketplace`), so it never collides with other plugins' config.
 
-```json
-{
-  "env": { "GROVER_ACCESS_TOKEN": "tok_your_token_here" }
-}
-```
-
-Claude Code injects this into the session, so the `${GROVER_ACCESS_TOKEN}`
-placeholder in the plugin's MCP config resolves automatically. (A shell
-`export GROVER_ACCESS_TOKEN=...` before launching `claude` also works.)
+The token is injected into the MCP server's auth header via the
+`${user_config.accessToken}` placeholder — no global environment variable and no
+manual `settings.json` editing required.
 
 ## Uninstalling
 
