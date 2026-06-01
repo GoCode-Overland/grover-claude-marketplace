@@ -11,55 +11,40 @@ it, so users can install it in two commands.
 /plugin install grover@grover-marketplace
 ```
 
-On install you'll be prompted for your Grover **access token**; the plugin stores
-it securely and uses it to authenticate the MCP server (see
-[Authentication](#authentication)).
+The first time you use the `grover` MCP server, your browser opens to sign in to
+Grover (OAuth). After you approve, the connection completes automatically — there
+is no token to paste or store (see [Authentication](#authentication)).
 
-> **Supported on Claude Code (CLI) only.** The Claude Desktop app is **not yet
-> supported** — see [Claude Desktop](#claude-desktop-not-yet-supported) below for
-> why and the planned fix.
+> **Works on both Claude Code (CLI) and Claude Desktop.** The server authenticates
+> over the MCP OAuth standard, which both clients support natively.
 
 ## What's included
 
 | Component | Description |
 |-----------|-------------|
 | `hello` skill | Greets you as the "Grover Rig Helper" (run `/hello`). |
-| `grover` MCP server | Connects to the remote Grover endpoint (`/mcp` on Vercel) with bearer-token auth. |
+| `grover` MCP server | Connects to the remote Grover endpoint (`/mcp` on Vercel) over OAuth2. |
 
 ## Authentication
 
-The Grover endpoint authenticates with a bearer **access token**. The plugin
-declares it as a `userConfig` field (`accessToken`), so Claude Code:
+The Grover endpoint authenticates with **OAuth2**, the
+[MCP-standard auth flow](https://modelcontextprotocol.io/specification/draft/basic/authorization).
+The plugin declares only the server URL — no token, header, or `userConfig`. When
+the client first connects, the server returns `401` with a `WWW-Authenticate`
+header pointing at its OAuth metadata, and the client takes it from there:
 
-- **prompts you for it at install time** — no manual file editing,
-- stores it **securely** (`sensitive: true`, kept out of plaintext config), and
-- **namespaces it per-plugin**, so it can't collide with other plugins' settings.
+- **discovers** the authorization server from the endpoint's
+  `/.well-known/oauth-protected-resource` metadata,
+- **registers itself dynamically** (no pre-shared client ID),
+- **runs the authorization-code + PKCE flow** in your browser, and
+- **stores and refreshes the token itself** — nothing is kept in plugin config.
 
-At install you'll see a prompt for **Access Token** — paste your `tok_...` value.
-The plugin builds the header `Authorization: Bearer ${user_config.accessToken}`
-from it. After installing, run `/mcp` — the `grover` server should show
-**connected**.
+After installing, trigger the `grover` server (or run `/mcp`) — your browser opens
+to sign in, and once approved the server shows **connected**. The token refreshes
+automatically; there's nothing to rotate or re-enter.
 
-To update the token later, reinstall the plugin (or run
-`/plugin marketplace update grover-marketplace` and reinstall) to be re-prompted.
-
-## Claude Desktop (not yet supported)
-
-Claude Desktop **cannot** authenticate this server today, for two reasons:
-
-1. **No `userConfig` install prompt.** Desktop doesn't surface the plugin's
-   `userConfig` prompt, so the token is never collected.
-2. **No `${user_config.accessToken}` interpolation.** That substitution is a
-   CLI/SDK feature; in Desktop the placeholder is passed through literally, so the
-   auth header is never filled in.
-
-The result: in Desktop the plugin installs and the `hello` skill works, but the
-`grover` MCP server loads without a valid token and never connects.
-
-**The fix** is server-side, not in this plugin: add **MCP OAuth support** to the
-Grover endpoint. Desktop supports remote MCP servers natively over OAuth, which
-would let it connect directly with no token handling at all. Until then, use the
-CLI.
+This works the same on **Claude Code (CLI)** and **Claude Desktop**, since both
+support remote MCP servers over OAuth natively.
 
 ## Uninstalling
 
