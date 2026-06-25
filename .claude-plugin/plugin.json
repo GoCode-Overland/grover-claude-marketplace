@@ -8,7 +8,7 @@
     "mcpServers": {
         "grover": {
             "type": "http",
-            "url": "https://grover-chat-git-grover-oauth-go-code.vercel.app/mcp"
+            "url": "https://dev.getgrover.ai/mcp"
         }
     }
 }
