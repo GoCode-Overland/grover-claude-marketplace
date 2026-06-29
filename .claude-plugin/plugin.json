@@ -1,9 +1,9 @@
 {
     "name": "grover",
     "description": "A plugin for Grover",
-    "version": "4.0.0",
+    "version": "4.0.1",
     "author": {
-        "name": "Will Fitch"
+        "name": "Grover"
     },
     "mcpServers": {
         "grover": {
