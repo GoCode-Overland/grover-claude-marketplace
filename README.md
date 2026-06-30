@@ -7,7 +7,7 @@ it, so users can install it in two commands.
 ## Installation
 
 ```text
-/plugin marketplace add will-stellar/grover-claude-plugin
+/plugin marketplace add GoCode-Overland/grover-claude-marketplace
 /plugin install grover@grover-marketplace
 ```
 
@@ -22,8 +22,7 @@ is no token to paste or store (see [Authentication](#authentication)).
 
 | Component | Description |
 |-----------|-------------|
-| `hello` skill | Greets you as the "Grover Rig Helper" (run `/hello`). |
-| `grover` MCP server | Connects to the remote Grover endpoint (`/mcp` on Vercel) over OAuth2. |
+| `grover` MCP server | Connects to the Grover backend (`ops.getgrover.ai/mcp`) over OAuth2. |
 
 ## Authentication
 
@@ -59,8 +58,6 @@ support remote MCP servers over OAuth natively.
 .claude-plugin/
   plugin.json        # Plugin manifest (name, version, MCP server)
   marketplace.json   # Marketplace index pointing at this plugin (source: "./")
-skills/
-  hello/SKILL.md     # The hello skill
 ```
 
 ## Development
@@ -68,7 +65,7 @@ skills/
 Test changes locally without pushing to GitHub:
 
 ```text
-/plugin marketplace add /path/to/grover-claude-plugin
+/plugin marketplace add /path/to/grover-claude-marketplace
 /plugin install grover@grover-marketplace
 ```
 

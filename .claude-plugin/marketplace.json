@@ -1,8 +1,8 @@
 {
     "name": "grover-marketplace",
     "owner": {
-        "name": "Will Fitch",
-        "email": "will@getstellar.ai"
+        "name": "GoCode Overland",
+        "email": "will@gocodeoverland.com"
     },
     "description": "Marketplace for the Grover Claude Code plugin",
     "plugins": [

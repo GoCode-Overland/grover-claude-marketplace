@@ -1,7 +1,7 @@
 {
     "name": "grover",
     "description": "A plugin for Grover",
-    "version": "4.0.1",
+    "version": "4.0.2",
     "author": {
         "name": "Grover"
     },
