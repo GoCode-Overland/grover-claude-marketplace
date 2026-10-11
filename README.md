@@ -23,6 +23,7 @@ is no token to paste or store (see [Authentication](#authentication)).
 | Component | Description |
 |-----------|-------------|
 | `grover` MCP server | Connects to the Grover backend (`ops.getgrover.ai/mcp`) over OAuth2. |
+| `usage-dashboard` skill | Grover staff only: renders the `get_usage_dashboard` tool as a one-screen company dashboard ("how is Grover doing"). The tool refuses every other account, so the skill does nothing for partners. |
 
 ## Authentication
 
@@ -58,6 +59,9 @@ support remote MCP servers over OAuth natively.
 .claude-plugin/
   plugin.json        # Plugin manifest (name, version, MCP server)
   marketplace.json   # Marketplace index pointing at this plugin (source: "./")
+skills/
+  usage-dashboard/
+    SKILL.md         # Grover-staff dashboard renderer (auto-discovered)
 ```
 
 ## Development
