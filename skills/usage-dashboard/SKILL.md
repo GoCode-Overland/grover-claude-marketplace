@@ -24,8 +24,8 @@ connector. Either is the same tool.
   view of acquisition and revenue; `includeStripe: false` skips the live Stripe
   price read if it is slow.
 
-If the tool answers with a forbidden-role error, the account is not
-`grover_owner` on the Grover MCP server. Say exactly that, and point to the staff
+If the tool answers with a forbidden-role error, the account is not Grover
+staff with all-company access (`grover_owner` or `grover_admin`, `allCompanies`). Say exactly that, and point to the staff
 web page (admin.getgrover.ai, "How Grover is doing") instead of guessing numbers.
 If the tool is missing, the Grover server is not connected: run `/mcp`.
 
