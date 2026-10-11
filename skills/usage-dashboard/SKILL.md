@@ -1,9 +1,9 @@
 ---
 name: usage-dashboard
-description: Grover staff only. Grover's internal company dashboard from the Grover MCP server's get_usage_dashboard tool - signups, MAU/WAU, per-company ARR, at-risk and up-renewal, green/amber/red company health with reasons, and platform health. Use when a Grover founder or staff member asks "how is Grover doing", "how is <company> doing", "is anything broken", or for usage, ARR, renewal or health numbers.
+description: Grover owner and named staff only. Grover's internal company dashboard from the Grover MCP server's get_usage_dashboard tool - signups, MAU/WAU, per-company ARR, at-risk and up-renewal, green/amber/red company health with reasons, and platform health. Use when a Grover founder or staff member asks "how is Grover doing", "how is <company> doing", "is anything broken", or for usage, ARR, renewal or health numbers.
 ---
 
-# Grover company dashboard (Grover staff only)
+# Grover company dashboard (Grover owner and named staff only)
 
 The output names Grover's customers and carries their billing figures. Keep it in
 this conversation: never paste a customer name or a figure into a commit, issue,
@@ -24,8 +24,9 @@ connector. Either is the same tool.
   view of acquisition and revenue; `includeStripe: false` skips the live Stripe
   price read if it is slow.
 
-If the tool answers with a forbidden-role error, the account is not Grover
-staff with all-company access (`grover_owner` or `grover_admin`, `allCompanies`). Say exactly that, and point to the staff
+If the tool answers with a forbidden-role error, the account is not allowed:
+the tool admits the Grover owner plus a short list of named staff, and nobody
+else. Say exactly that, and point to the staff
 web page (admin.getgrover.ai, "How Grover is doing") instead of guessing numbers.
 If the tool is missing, the Grover server is not connected: run `/mcp`.
 
