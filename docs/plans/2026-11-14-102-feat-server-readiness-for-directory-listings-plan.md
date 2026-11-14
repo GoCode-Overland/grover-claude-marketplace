@@ -112,3 +112,25 @@ errors on tools they were never meant to see), and any directory submission (blo
    Recommendation: not at all.
 2. Display name in clients: "Grover" or "Grover for Partners"? The second leaves room for a rider
    connector later (plan 103, option E).
+
+## Independent review (2026-11-14)
+
+**Verdict: SOUND WITH CHANGES.** P1 is right. Effort is M–L, not M: 127 tools each need a title and three hints that a person has reviewed.
+
+Checked:
+- Claude's directory requires "a `title` and the applicable `readOnlyHint` or `destructiveHint`" on every tool. The portal groups tools by read and write and flags missing annotations (claude.com/docs/connectors/building/submission, fetched this session). VERIFIED.
+- grover-chat has zero `readOnlyHint` or `destructiveHint` under `src/lib/public-mcp`. VERIFIED.
+
+Corrections:
+1. **Tool counts.**
+   - The server has 128 distinct names, but `get_standout_users_by_circle` is commented out (`tools/index.ts:415`), so 127 tools are registered.
+   - Staff-only tools number **63**, not "roughly a third": the owner-gated arrays in `tools/index.ts` total 62 (business-OS 24, billing 4, moderation 5, proposals 11, pin approvals 3, book sponsorship 2, onboarding 1, usage dashboard 1, link clicks 1, push 1, growth 2, account deletion 3, ticker 3, partner insert 1), plus `create_company` (`grover_admin`).
+   - A partner therefore sees at most **64** tools after unit 2, not about 85 (plan 104 repeats the 85).
+2. **ChatGPT's rule is stricter than Claude's.** OpenAI's app submission guidelines require every tool's `annotations` to set `readOnlyHint`, `destructiveHint` **and** `openWorldHint` as explicit booleans. The review form also asks for a justification of each value. Unit 1's table must set all three on every tool, not only "where applicable", or the ChatGPT scan fails.
+3. **Unit 2 needs three gates, not one.**
+   - grover_owner for the arrays above.
+   - The `isInternalDashboardViewer` allowlist for `get_usage_dashboard`.
+   - `grover_admin` for `create_company`.
+
+   Reuse the exported arrays and add a test that every name in them is absent for a `company_admin` context. Do not also filter the company-role writes for `company_viewer` in this plan. They are gated by company role, so a viewer sees them refuse.
+4. **The Unit 1 wrapper must be outermost-safe.** `server.ts` already wraps `registerTool` three times (audit, billing, access) and relies on install order. An annotation wrapper only edits the config object, so install it first and assert in a test that the config identity used by `withAccess` (a `WeakMap` keyed on the config object, `server.ts:1056-1074`) is preserved. Replacing the config object would silently drop every access declaration.

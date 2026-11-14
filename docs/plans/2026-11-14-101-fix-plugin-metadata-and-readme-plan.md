@@ -119,3 +119,14 @@ plugin listed where partners can find it without a link.
 1. License: MIT, or "all rights reserved" (the directory accepts any SPDX id or a LICENSE file)?
 2. OK to use the knot mark as the plugin and connector icon?
 3. Which support address should partners use (will@ or a shared support@)?
+
+## Independent review (2026-11-14)
+
+**Verdict: SOUND.** P1 and effort S are right.
+
+Re-ran `claude plugin validate .` (2.1.325): it passes with two directory warnings, `ICON_MISSING` and `PRIVACY_URL_MISSING`. With `--profile directory` it fails on `LICENSE_MISSING` alone. That matches the plan exactly. The manifests are at `.claude-plugin/plugin.json` and `.claude-plugin/marketplace.json`, and both have `description: "A plugin for Grover"`.
+
+Corrections:
+1. `privacyPolicyUrl` should point at a policy that covers the MCP/dashboard data flow: which admin and partner data the server reads, and the conversation logs (`admin_mcp_logs`). If `/legal/privacy` is the marketing-site policy, a partner-facing section is needed. OpenAI's app review also requires a policy that lists data categories, recipients and retention (developers.openai.com/apps-sdk/app-submission-guidelines). Check its content, not just that the link exists.
+2. README "who can sign in": sign-in to the MCP server is an email magic link to the dashboard account (grover-chat `src/lib/modules/admin/oauth/html.ts:8,69`). Say so, and say that the link must be opened in the same browser. That is the most likely "sign-in loop".
+3. Unit 6's CI must install Claude Code with a pinned version. The validator's checks change between releases, and an unpinned install will turn the check red on its own.

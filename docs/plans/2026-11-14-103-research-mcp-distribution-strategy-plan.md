@@ -112,3 +112,13 @@ Custom GPT (superseded by apps).
    legal pages, or "Grover")?
 2. Is ChatGPT worth a review cycle now, or after Claude's listing shows usage?
 3. Do you want a rider-facing, no-login connector (option E) on the roadmap?
+
+## Independent review (2026-11-14)
+
+**Verdict: SOUND WITH CHANGES.** The order is right: plan 102 first, then the Claude directory. **ChatGPT (C) has a blocker the plan misses.** Priority should be P2. Usage does not justify P1 yet: 2 of 30 partner companies made any MCP call in the last 30 days (live `get_usage_dashboard`, 2026-11-14), which is exactly the plan's own "first move is onboarding" trigger.
+
+Corrections:
+1. **ChatGPT review needs a password login.** OpenAI's app submission guidelines require "a login and password for a fully featured demo account that includes sample data". They reject apps that need "additional login steps", which includes inaccessible email or 2FA. Grover's MCP OAuth signs in by email magic link only (grover-chat `src/lib/modules/admin/oauth/html.ts:8,69`). A reviewer cannot complete it. Option C therefore needs a reviewer sign-in door on the admin OAuth server, like the Better Auth `BETTER_AUTH_REVIEWER_EMAILS` door in grover-chat. That is an auth change: give it its own plan and an independent review. Without it, C is blocked.
+2. Claude's Verified review also "asks for test access by email" (submission doc). A Community listing does not need it, so A is unblocked. The reviewer account must be a dev-style test partner with sample data on **prod** (that is where the listed server points). That conflicts with the workspace rule "test accounts live on dev, never production". Put this conflict to Will; do not resolve it in the plan.
+3. OpenAI also requires a verified organization in the Platform dashboard and per-tool justifications. Add both to C's unit list. The "domain-verification token" detail came from third-party guides; the official page did not mention it.
+4. Option D's `server.json` would publicise a server that lists staff-only tools until plan 102 unit 2 ships. Keep D strictly after 102, as the order says.

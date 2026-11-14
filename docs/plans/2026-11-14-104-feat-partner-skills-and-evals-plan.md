@@ -82,3 +82,14 @@ that alone.
 1. Which of the four jobs do partners actually ask you for? Ship that one first.
 2. Should these jobs also exist as MCP prompts on the server, so ChatGPT and bare-connector users get
    them too? That is the more universal home; skills can then stay thin.
+
+## Independent review (2026-11-14)
+
+**Verdict: NEEDS REWORK.** Two of the four skills call tools partners cannot use. Lower the priority to P3 until plan 102 ships and connector usage rises above 2 of 30 companies.
+
+Corrections:
+1. **Skill 2 (`knowledge-base-gaps`) calls `grover_owner`-only tools.** `get_assistant_knowledge_sources` and `add_kb_text` are both in `BUSINESS_OS_TOOL_NAMES` (grover-chat `src/lib/public-mcp/tools/index.ts`, the knowledge-curation and ingestion entries). Every partner would get "Forbidden". After plan 102 unit 2 those tools will not even be listed. Rebuild it on partner tools only: `summarize_chat_sessions`, `list_knowledge_bases`, `get_kb_status`, `list_faqs`. The output should be a document *suggestion*, since partners cannot add KB text over MCP today.
+2. **Several writes need company_owner, not company_admin.** `create_faq`/`update_faq` (`faqs.ts:214,335,413`) and `update_rig_template` (`update_rig_template.ts:28`) use `WRITE_OWNER_ROLES`. `summarize_chat_sessions` excludes `company_viewer`. Each skill should state the role it needs. Each skill also needs an eval case for the "Forbidden: your role" path, so the skill explains it instead of retrying.
+3. **"About 85 tools once staff-only are hidden" is wrong:** it is 64 at most (see plan 102's review).
+4. **Open question 2 should be the recommendation.** Skills reach only plugin-loading clients. MCP prompts on the server reach Claude, ChatGPT and the dashboard assistant (plan grover-admin 102) alike. Ship `customer-questions-report` as a server prompt first and keep the skill as a thin wrapper.
+5. **Evals send real tool calls.** Running them weekly against dev from this public repo's CI needs a dev partner credential stored as a CI secret. That is a new long-lived secret for a public repo, and Will should approve it explicitly.
