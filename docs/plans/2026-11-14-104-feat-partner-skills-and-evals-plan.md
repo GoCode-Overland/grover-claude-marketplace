@@ -93,3 +93,5 @@ Corrections:
 3. **"About 85 tools once staff-only are hidden" is wrong:** it is 64 at most (see plan 102's review).
 4. **Open question 2 should be the recommendation.** Skills reach only plugin-loading clients. MCP prompts on the server reach Claude, ChatGPT and the dashboard assistant (plan grover-admin 102) alike. Ship `customer-questions-report` as a server prompt first and keep the skill as a thin wrapper.
 5. **Evals send real tool calls.** Running them weekly against dev from this public repo's CI needs a dev partner credential stored as a CI secret. That is a new long-lived secret for a public repo, and Will should approve it explicitly.
+
+Superseded by 2026-11-14-111-feat-partner-skills-and-evals-v2-plan.md (2026-11-14).
