@@ -86,8 +86,9 @@ errors on tools they were never meant to see), and any directory submission (blo
    (`PIN_APPROVAL_TOOL_NAMES`, `PROPOSAL_TOOL_NAMES`, etc.). A test builds the server with a
    `company_admin` context and asserts none of those names appear. Verify: the test, plus a
    dev partner test account (per the test-account runbook) connected in Claude listing only its
-   tools. This is an auth-adjacent change: it gets the independent reviewer the workspace rules
-   require for `src/lib/modules/auth/**`-class changes.
+   tools. This is authorization-adjacent, so give it an independent reviewer, as the workspace
+   rules already require for `src/lib/modules/auth/**` changes (`public-mcp/` is not on that list;
+   this is a recommendation, not a rule).
 3. **Instructions and identity.** Set `name`, `version`, `instructions` in `buildPublicMcpServer`.
    Verify in MCP Inspector's server info pane.
 4. **Smoke test the three clients** against dev: Claude Code (plugin), claude.ai custom connector,
